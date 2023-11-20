@@ -164,8 +164,6 @@ SELFHEAL_CONFIG, *PSELFHEAL_CONFIG;
 /**
 * @brief Initialise the wan features.
 *
-* @param None
-*
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.

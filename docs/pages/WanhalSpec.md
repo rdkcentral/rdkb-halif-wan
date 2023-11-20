@@ -47,6 +47,7 @@ Different 3rd party vendors are allowed to allocate memory for internal operatio
 ## Power Management Requirements
 
 The HAL is not involved in any of the power management operations.
+
 Any power management state transitions MUST not affect the operation of the HAL.
 
 ## Asynchronous Notification Model
@@ -74,7 +75,7 @@ Following non functional requirement should be supported by the component.
 
 ## Logging and debugging requirements
 
-The component is should log all the error and critical informative messages which helps to debug/triage the issues and understand the functional flow of the system.
+The component should log all the errors and critical informative messages, which helps to debug or triage the issues and understand the functional flow of the system.
 
 The logging should be consistent across all HAL components.
 
