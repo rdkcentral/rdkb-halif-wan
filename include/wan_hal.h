@@ -160,6 +160,15 @@ SELFHEAL_CONFIG, *PSELFHEAL_CONFIG;
  * @{
  */
 
+/*
+ * TODO:
+ *
+ * 1. Extend the return codes by listing out the possible reasons of failure, to improve the interface in the future.
+ *    This was reported during the review for header file migration to opensource github.
+ *
+ */
+
+ 
 /* wan_hal_Init() function */
 /**
 * @brief Initialise the wan features.
@@ -208,7 +217,6 @@ int wan_hal_SetWanConnectionEnable(unsigned int enable);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_SetSelfHealConfig(PSELFHEAL_CONFIG pSelfHealConfig);
@@ -223,7 +231,6 @@ int wan_hal_SetSelfHealConfig(PSELFHEAL_CONFIG pSelfHealConfig);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_GetWanOEUpstreamCurrRate(unsigned int *pValue);
@@ -237,7 +244,6 @@ int wan_hal_GetWanOEUpstreamCurrRate(unsigned int *pValue);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_GetWanOEDownstreamCurrRate(unsigned int *pValue);
@@ -259,7 +265,6 @@ int wan_hal_GetWanOEDownstreamCurrRate(unsigned int *pValue);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_SetQoSConfiguration(PWAN_QOS_QUEUE pQueue, unsigned int QueueNumberOfEntries, const char* baseifname, const char* wanifname);
@@ -273,7 +278,6 @@ int wan_hal_SetQoSConfiguration(PWAN_QOS_QUEUE pQueue, unsigned int QueueNumberO
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_ConfigureIpv4(PWAN_IPV4_CFG pWanIpv4Cfg);
@@ -287,7 +291,6 @@ int wan_hal_ConfigureIpv4(PWAN_IPV4_CFG pWanIpv4Cfg);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_UnConfigureIpv4(PWAN_IPV4_CFG pWanIpv4Cfg);
@@ -301,7 +304,6 @@ int wan_hal_UnConfigureIpv4(PWAN_IPV4_CFG pWanIpv4Cfg);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_ConfigureIpv6(PWAN_IPV6_CFG pWanIpv6Cfg);
@@ -315,7 +317,6 @@ int wan_hal_ConfigureIpv6(PWAN_IPV6_CFG pWanIpv6Cfg);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_UnConfigureIpv6(PWAN_IPV6_CFG pWanIpv6Cfg);
@@ -329,7 +330,6 @@ int wan_hal_UnConfigureIpv6(PWAN_IPV6_CFG pWanIpv6Cfg);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_EnableMapt( PWAN_MAPT_CFG pMAPTCfg );
@@ -347,7 +347,6 @@ int wan_hal_EnableMapt( PWAN_MAPT_CFG pMAPTCfg );
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-* @remark The caller is responsible for providing a valid memory location for the function argument.
 *
 */
 int wan_hal_DisableMapt(const char* ifName);
@@ -370,8 +369,7 @@ int wan_hal_enableWanOEMode(const unsigned char enable);
  *                     \n The returned string will be Zero Terminated (ZT).
  *                     \n It is a vendor specific value.
  * @retval RETURN_OK if successful else RETURN_ERR.
- * @remark The caller is responsible for providing a valid memory location for the function argument.
- */
+  */
 int wan_hal_getAuthInfo(char *authInfo);
 
 /** @} */  //END OF GROUP WAN_HAL_APIS
