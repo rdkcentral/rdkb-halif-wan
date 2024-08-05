@@ -105,9 +105,9 @@ _WAN_QOS_QUEUE
     unsigned char       queueEnable;             /**< Indicates if the queue is enabled (TRUE or FALSE). */
     char                queueStatus[256];        /**< Status of the queue (Disabled, Enabled). */
     char                queueInterface[256];     /**< Associated interface for the queue (e.g., erouter0). */
-    unsigned long       queueWeight;             /**< Weight of the queue (0 to 100, vendor-specific). */
+    unsigned long       queueWeight;             /**< Weight of the queue (0 to 100). */
     unsigned long       queuePrecedence;         /**< Precedence of the queue (1 to 4294967295, vendor-specific). */
-    unsigned long       REDThreshold;            /**< RED (Random Early Detection) threshold (1 to 100, vendor-specific). */
+    unsigned long       REDThreshold;            /**< RED (Random Early Detection) threshold (1 to 100. */
     char                dropAlgorithm[256];      /**< Drop algorithm used by the queue (e.g., DT, RED, WRED, vendor-specific). */
     char                schedulerAlgorithm[256]; /**< Scheduling algorithm used by the queue (e.g., SP, WRR, WFQ, vendor-specific). */
     signed long         shapingRate;             /**< Shaping rate for the queue (-1 to 2147483647, vendor-specific). */
@@ -117,10 +117,10 @@ _WAN_QOS_QUEUE
     signed long         DslLatency;              /**< DSL latency for the queue (-1 to 1, vendor-specific). */
     signed long         PtmPriority;             /**< Ptm priority for the queue (-1 to 1, vendor-specific). */
     unsigned long       QueueId;                 /**< ID of the queue (unique identifier, typically 1, 2, 3, ..., vendor-specific). */
-    unsigned long       LowClassMaxThreshold;    /**< MaxThreshold for the low class of the queue (0 to 100, vendor-specific). */
-    unsigned long       LowClassMinThreshold;    /**< MinThreshold for the low class of the queue (0 to 100, vendor-specific). */
-    unsigned long       HighClassMinThreshold;   /**< MinThreshold for the high class of the queue (0 to 100, vendor-specific). */
-    unsigned long       HighClassMaxThreshold;   /**< MaxThreshold for the high class of the queue (0 to 100, vendor-specific). */
+    unsigned long       LowClassMaxThreshold;    /**< MaxThreshold for the low class of the queue (0 to 100). */
+    unsigned long       LowClassMinThreshold;    /**< MinThreshold for the low class of the queue (0 to 100). */
+    unsigned long       HighClassMinThreshold;   /**< MinThreshold for the high class of the queue (0 to 100). */
+    unsigned long       HighClassMaxThreshold;   /**< MaxThreshold for the high class of the queue (0 to 100). */
     char                L2DeviceType[32];        /**< Type of Layer 2 device associated with the queue (eth, ptm). */
 
 }WAN_QOS_QUEUE,  *PWAN_QOS_QUEUE;
@@ -149,7 +149,7 @@ _WAN_MAPT_CFG
 typedef struct
 _SELFHEAL_CONFIG
 {
-    unsigned int rebootStatus; /**< Reboot status (0 or 1). 0 indicates no reboot, 1 indicates a reboot. */
+    unsigned int rebootStatus; /**< Indicates whether a reboot is required (0: No reboot, 1: Reboot). */
 }
 SELFHEAL_CONFIG, *PSELFHEAL_CONFIG;
 
@@ -160,216 +160,229 @@ SELFHEAL_CONFIG, *PSELFHEAL_CONFIG;
  * @{
  */
 
-/*
- * TODO:
- *
- * 1. Extend the return codes by listing out the possible reasons of failure, to improve the interface in the future.
- *    This was reported during the review for header file migration to opensource github.
- *
- */
-
- 
-/* wan_hal_Init() function */
 /**
-* @brief Initialise the wan features.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Initializes the WAN features.
+ *
+ * This function is responsible for setting up the WAN Hardware Abstraction Layer (HAL)
+ * and preparing it for operation. This may involve initializing internal data structures,
+ * establishing communication with the WAN hardware, and starting any necessary background processes.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the initialization is successful.
+ * @retval RETURN_ERR if an error occurs during initialization.
+ */
 int wan_hal_Init();
 
-/* wan_hal_SetWanmode() function */
 /**
-* @brief Set wanmode value.
-*
-* @param[in] mode It represents the WAN mode to be set.
-*                 \n mode can have any value from enum t_eWanMode.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Sets the WAN mode of the device.
+ * 
+ * This function configures the operational mode of the WAN interface, determining 
+ * how the device connects to the wider network (e.g., DSL, Ethernet, or automatic selection).
+ *
+ * @param[in] mode The desired WAN mode to be set (see `t_eWanMode` for valid options).
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the WAN mode is set successfully.
+ * @retval RETURN_ERR if an error occurs during the configuration process.
+ */
 int wan_hal_SetWanmode(t_eWanMode mode);
 
-/* wan_hal_SetWanConnectionEnable() function */
 /**
-* @brief Set wanconnection enable value.
-*
-* @param[in] enable It is an unsigned integer, that represents WanConnectionEnable value to be set.
-*                   \n The possible values of enable are:
-*                   \n ENABLE : 1, DISABLE : 0.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Enables or disables the WAN connection.
+ *
+ * This function controls the activation or deactivation of the WAN interface,
+ * allowing the device to connect to or disconnect from the wider network.
+ *
+ * @param[in] enable Flag to enable (1) or disable (0) the WAN connection.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the operation is successful.
+ * @retval RETURN_ERR if an error occurs during the operation.
+ */
 int wan_hal_SetWanConnectionEnable(unsigned int enable);
 
 /**
-* @brief Set SelfHeal Configuration to wanmanager.
-*
-* @param[in] pSelfHealConfig A pointer to the SELFHEAL_CONFIG structure containing the desired SelfHeal configuration.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Sets the SelfHeal configuration for the WAN manager.
+ *
+ * This function applies the desired SelfHeal configuration settings, 
+ * which determine how the system should respond to WAN-related errors or failures.
+ *
+ * @param[in] pSelfHealConfig Pointer to a `SELFHEAL_CONFIG` structure containing the 
+ *                           SelfHeal configuration parameters.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the configuration is set successfully.
+ * @retval RETURN_ERR if an error occurs during configuration.
+ */
 int wan_hal_SetSelfHealConfig(PSELFHEAL_CONFIG pSelfHealConfig);
 
-/* wanmgr_hal_GetWanOEUpstreamCurrRate() function */
 /**
-* @brief Get the current payload bandwidth of the upstream WANoE Connection.
-*
-* @param[out] pValue A pointer to an unsigned integer, where the current payload bandwidth of the upstream WANoE Connection to be updated.
-*                    \n The valid range of the upstream rate is 0 to 2,147,483,647.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Retrieves the current payload bandwidth of the upstream WANoE (WAN over Ethernet) connection.
+ *
+ * This function fetches the real-time rate at which payload data is being transmitted
+ * on the upstream WANoE connection. The rate is measured in bits per second.
+ *
+ * @param[out] pValue A pointer to an unsigned integer variable where the retrieved upstream 
+ *                    bandwidth value will be stored.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the upstream bandwidth is successfully retrieved.
+ * @retval RETURN_ERR if an error occurs during the retrieval process.
+ */
 int wan_hal_GetWanOEUpstreamCurrRate(unsigned int *pValue);
 
-/* wanmgr_hal_GetWanOEDownstreamCurrRate() function */
 /**
-* @brief Get the current payload bandwidth of the downstream WANoE Connection.
-*
-* @param[out] pValue A pointer to an unsigned integer, where the current payload bandwidth of the downstream WANoE Connection to be updated.
-*                    \n The valid range of the downstream rate is 0 to 2,147,483,647.
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Retrieves the current payload bandwidth of the downstream WANoE (WAN over Ethernet) connection.
+ *
+ * This function fetches the real-time rate at which payload data is being received
+ * on the downstream WANoE connection. The rate is measured in bits per second.
+ *
+ * @param[out] pValue A pointer to an unsigned integer variable where the retrieved downstream 
+ *                    bandwidth value will be stored.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the downstream bandwidth is successfully retrieved.
+ * @retval RETURN_ERR if an error occurs during the retrieval process.
+ */
 int wan_hal_GetWanOEDownstreamCurrRate(unsigned int *pValue);
 
-/* wan_hal_SetQosConfiguration() function */
 /**
-* @brief Sets the current QoS configuration.
-* @param[in] pQueue A Pointer the structure WAN_QOS_QUEUE which contains the QoS configurations to be set.
-* @param[in] QueueNumberOfEntries The number of QoS profiles.
-*            \n It is a vendor specific value.
-* @param[in] baseifname A pointer to the character array that will hold the Base interface name.
-*                         \n The buffer size should be atleast 32 bytes,
-*                         \n which is considered as the maximum limit for the interface name, including any null terminators or additional information.
-*                         \n The possible values are : erouter0.
-* @param[in] wanifname A pointer to the character array that will hold the Wan interface name.
-*                        \n The buffer size should be atleast 32 bytes,
-*                        \n which is considered as the maximum limit for the interface name, including any null terminators or additional information.
-*                        \n The possible values are : erouter0.
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Configures the Quality of Service (QoS) settings for the WAN interface.
+ *
+ * This function applies the provided QoS queue configurations to the specified 
+ * base and WAN interfaces. It allows for fine-grained control over how network 
+ * traffic is prioritized and managed.
+ *
+ * @param[in] pQueue An array of `WAN_QOS_QUEUE` structures containing the QoS configurations for each queue.
+ * @param[in] QueueNumberOfEntries The number of QoS queue configurations provided in the `pQueue` array.
+ * @param[in] baseifname The name of the base interface (e.g., "erouter0").
+ * @param[in] wanifname The name of the WAN interface (e.g., "erouter0").
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the QoS configuration is applied successfully.
+ * @retval RETURN_ERR if an error occurs during the configuration process.
+ */
 int wan_hal_SetQoSConfiguration(PWAN_QOS_QUEUE pQueue, unsigned int QueueNumberOfEntries, const char* baseifname, const char* wanifname);
 
-/* wan_hal_ConfigureIpv4() function */
 /**
-* @brief configure IPv4 dnsservers, netmask and ip address for the required interface
-*
-* @param[in] pWanIpv4Cfg Pointer to the structure WAN_IPV4_CFG which contains WAN IPv4 configuration.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Configures IPv4 settings for the specified WAN interface.
+ *
+ * This function applies the provided IPv4 configuration parameters to the designated 
+ * WAN interface. The configuration includes the IP address, subnet mask, default gateway, 
+ * and DNS servers.
+ *
+ * @param[in] pWanIpv4Cfg Pointer to a `WAN_IPV4_CFG` structure containing the IPv4 configuration details.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the configuration is applied successfully.
+ * @retval RETURN_ERR if an error occurs during the configuration process.
+ */
 int wan_hal_ConfigureIpv4(PWAN_IPV4_CFG pWanIpv4Cfg);
 
-/* wan_hal_UnConfigureIpv4() function */
 /**
-* @brief unconfigure IPv4 dnsservers, netmask and ip address for the required interface
-*
-* @param[in] pWanIpv4Cfg Pointer to the structure WAN_IPV4_CFG which contains WAN IPv4 configuration.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Removes the IPv4 configuration from the specified WAN interface.
+ * 
+ * This function clears the IPv4 settings, including the IP address, subnet mask,
+ * default gateway, and DNS servers, from the designated WAN interface.
+ * 
+ * @param[in] pWanIpv4Cfg A pointer to a `WAN_IPV4_CFG` structure containing the interface name 
+ *                       and optionally the IPv4 configuration details to be removed.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the IPv4 configuration is removed successfully.
+ * @retval RETURN_ERR if an error occurs during the unconfiguration process.
+ */
 int wan_hal_UnConfigureIpv4(PWAN_IPV4_CFG pWanIpv4Cfg);
 
-/* wan_hal_ConfigureIpv6() function */
 /**
-* @brief Add IPv6 address for the required interface
-*
-* @param[in] pWanIpv6Cfg Pointer to the structure WAN_IPV6_CFG which contains WAN IPv6 configuration.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Adds an IPv6 address to the specified WAN interface.
+ * 
+ * This function assigns the provided IPv6 address, along with its preferred and valid lifetimes, 
+ * and DNS servers to the designated WAN interface.
+ * 
+ * @param[in] pWanIpv6Cfg Pointer to a `WAN_IPV6_CFG` structure containing the IPv6 configuration details.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the IPv6 address is added successfully.
+ * @retval RETURN_ERR if an error occurs during the configuration process.
+ */
 int wan_hal_ConfigureIpv6(PWAN_IPV6_CFG pWanIpv6Cfg);
 
-/* wan_hal_UnConfigureIpv4() function */
 /**
-* @brief Delete IPv6 address for the required interface
-*
-* @param[in] pWanIpv6Cfg Pointer to the structure WAN_IPV6_CFG which contains WAN IPv6 configuration.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Removes an IPv6 address from the specified WAN interface.
+ *
+ * This function deletes the IPv6 address specified in the `pWanIpv6Cfg` structure
+ * from the designated WAN interface.
+ *
+ * @param[in] pWanIpv6Cfg Pointer to a `WAN_IPV6_CFG` structure containing the IPv6 
+ *                       address and interface name to be removed.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the IPv6 address is successfully removed.
+ * @retval RETURN_ERR if an error occurs during the process.
+ */
 int wan_hal_UnConfigureIpv6(PWAN_IPV6_CFG pWanIpv6Cfg);
 
-/* wan_hal_EnableMapt() function */
 /**
-* @brief Enable MAP-T for the required interface
-*
-* @param[in] pMAPTCfg Pointer to the structure WAN_MAPT_CFG which contains WAN MAP-T configuration.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Enables MAP-T (Mapping of Address and Port Translation) on the specified WAN interface.
+ *
+ * This function activates the MAP-T protocol on the designated interface, using the
+ * configuration parameters provided in the `pMAPTCfg` structure. MAP-T is used to
+ * translate IPv6 addresses and ports to IPv4 equivalents, allowing IPv6-only clients to
+ * communicate with IPv4-only servers.
+ *
+ * @param[in] pMAPTCfg Pointer to a `WAN_MAPT_CFG` structure containing the configuration
+ *                     details for MAP-T.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if MAP-T is enabled successfully.
+ * @retval RETURN_ERR if an error occurs during the enablement process.
+ */
 int wan_hal_EnableMapt( PWAN_MAPT_CFG pMAPTCfg );
 
-/* wan_hal_DisableMapt() function */
 /**
-* @brief Disable MAP-T for the required interface
-*
-* @param[in] ifName It is a pointer to a constant character array (string) named ifName.
-*                  \n The possible values are : erouter0.
-*                  \n This parameter represents the name of the interface on which the MAP-T feature is to be disabled.
-*                  \n The buffer size should be at least 64 bytes,
-*                  \n which is the recommended maximum length for the input string including any null terminators or additional information.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*/
+ * @brief Disables MAP-T (Mapping of Address and Port Translation) on the specified WAN interface.
+ * 
+ * This function deactivates the MAP-T protocol on the given interface, 
+ * preventing further translation of IPv6 addresses and ports to IPv4 equivalents.
+ *
+ * @param[in] ifName The name of the WAN interface on which MAP-T is to be disabled (e.g., "erouter0").
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if MAP-T is disabled successfully.
+ * @retval RETURN_ERR if an error occurs during the disablement process.
+ */
 int wan_hal_DisableMapt(const char* ifName);
 
 /**
- * @brief Set/Reset WANoE mode based on the enable flag.
- * @param[in] enable It is an unsigned char type named enable, used to enable or disable WANoE mode.
- *                   \n The use of the const qualifier indicates that the parameter value will not be modified within the function.
- *                   \n The possible values are : 0, 1.
+ * @brief Enables or disables WANoE (WAN over Ethernet) mode.
+ * 
+ * This function allows you to control whether the WAN interface operates in WANoE mode.
+ * When enabled, the device's WAN connection is established over an Ethernet link.
+ *
+ * @param enable Set to 1 to enable WANoE mode, or 0 to disable it.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the operation is successful.
+ * @retval RETURN_ERR if an error occurs.
  */
 int wan_hal_enableWanOEMode(const unsigned char enable);
 
 /**
- * @brief Get authentication information like ADSL username and password.
- * @param[out] authInfo It is a character pointer to hold the authentication data.
- *                     \n It is a pointer to a character array (string) named authInfo.
- *                     \n This parameter is used to pass a buffer or memory location where the authentication information will be stored.
- *                     \n The buffer size should be at least 256 bytes long and the maximum buffer size is 16384.
- *                     \n A buffer of this size ensures space for the returned value with any null terminators or additional information.
- *                     \n The returned string will be Zero Terminated (ZT).
- *                     \n It is a vendor specific value.
- * @retval RETURN_OK if successful else RETURN_ERR.
-  */
+ * @brief Retrieves authentication information for the WAN connection.
+ *
+ * This function fetches authentication credentials, such as the ADSL username and password,
+ * required to establish or maintain the WAN connection. The retrieved information is 
+ * stored in a buffer provided by the caller.
+ *
+ * @param[out] authInfo A pointer to a character buffer where the retrieved authentication information
+ *                      will be stored. Ensure the buffer is sufficiently large to hold the data
+ *                      (minimum 256 bytes, maximum 16384 bytes). The returned string will be null-terminated.
+ *
+ * @returns The status of the operation.
+ * @retval RETURN_OK if the authentication information is retrieved successfully.
+ * @retval RETURN_ERR if an error occurs during the retrieval process.
+ */
 int wan_hal_getAuthInfo(char *authInfo);
 
 /** @} */  //END OF GROUP WAN_HAL_APIS
