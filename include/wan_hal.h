@@ -63,7 +63,6 @@ typedef enum
 } t_eWanMode;
 
 /**
-* @struct WAN_IPV4_CFG
 * @brief Contains WAN IPv4 configuration
 */
 typedef struct
